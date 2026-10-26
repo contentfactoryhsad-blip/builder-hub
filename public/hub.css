@@ -1,0 +1,115 @@
+/* Builder Hub — 빌더들과 같은 무드 (LGEI 폰트, 웜 그레이, Active Red).
+   토큰은 11 Christmas/public/style.css 의 :root 를 그대로 가져왔다. */
+
+@font-face { font-family: "LGEI Headline"; src: url("fonts/LGEIHeadlineTTF-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "LGEI Headline"; src: url("fonts/LGEIHeadlineTTF-Semibold.ttf") format("truetype"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "LGEI Headline"; src: url("fonts/LGEIHeadlineTTF-Bold.ttf") format("truetype"); font-weight: 700; font-display: swap; }
+/* Sales 빌더 스티커 숫자 폰트 */
+@font-face { font-family: "Cal Sans"; src: url("fonts/CalSans-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+
+:root {
+  --font-lgei: "LGEI Headline", "Apple SD Gothic Neo", "Noto Sans CJK KR", "Segoe UI", sans-serif;
+  --gray-50: #FAF9F5;
+  --gray-100: #F6F3EB;
+  --gray-200: #E6E1D6;
+  --gray-300: #CBC8C2;
+  --gray-400: #A19E99;
+  --gray-500: #716F6A;
+  --gray-900: #262626;
+  --brand: #FD312E;
+  --page: #F8F7F5;
+  --header-h: 64px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; }
+body {
+  font: 13px/1.45 var(--font-lgei);
+  background: var(--page);
+  color: var(--gray-900);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── 헤더 ───────────────────────────────────────────── */
+.app-header {
+  height: var(--header-h); padding: 0 32px;
+  display: flex; align-items: center;
+  background: #fff; border-bottom: 1px solid var(--gray-200);
+}
+.brand { display: flex; align-items: center; gap: 8px; color: inherit; text-decoration: none; transition: opacity .15s; }
+.brand:hover { opacity: .7; }
+.brand img { height: 20px; }
+.brand .divider { width: 1px; height: 16px; background: var(--gray-200); }
+.brand .title { font-weight: 700; font-size: 15px; }
+
+/* ── 카드 그리드 ─────────────────────────────────────── */
+.hub { max-width: 1200px; margin: 0 auto; padding: 48px 32px 64px; }
+.hub-head { margin-bottom: 24px; }
+.hub-head h1 { margin: 0; font-size: 24px; font-weight: 700; }
+.hub-head p { margin: 4px 0 0; font-size: 14px; color: var(--gray-500); }
+
+.hub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+
+/* 정사각 카드 — 위 썸네일, 아래 이름 (BF 빌더 Select Content Type 카드와 같은 구성) */
+.hub-card {
+  position: relative; aspect-ratio: 1; min-width: 0; padding: 16px;
+  display: flex; flex-direction: column; gap: 16px;
+  background: #fff; border: 1px solid var(--gray-200); border-radius: 12px;
+  color: inherit; text-decoration: none;
+  transition: border-color .15s, box-shadow .15s, transform .15s;
+}
+.hub-card:not(.is-soon):hover { border-color: var(--brand); box-shadow: 0 8px 24px -8px rgb(0 0 0 / .12); transform: translateY(-2px); }
+.hub-card:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.hub-card.is-soon { cursor: default; }
+
+.hub-card-thumb { position: relative; flex: 1; min-height: 0; border-radius: 8px; overflow: hidden; background: var(--gray-100); }
+/* 박스를 꽉 채워 크롭 — 보여줄 위치는 builders.js 의 thumbPos (기본 가운데) */
+.hub-card-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s ease; }
+.hub-card:hover .hub-card-thumb img { transform: scale(1.03); }
+
+/* 썸네일 가운데 스티커 — 박스 높이의 82% */
+.hub-sticker {
+  position: absolute; top: 50%; left: 50%; height: 82%; width: auto; aspect-ratio: 1;
+  transform: translate(-50%, -50%); filter: drop-shadow(0 6px 14px rgb(0 0 0 / .2));
+  transition: transform .3s ease;
+}
+.hub-card:hover .hub-sticker { transform: translate(-50%, -50%) scale(1.05); }
+
+/* Coming soon — 썸네일 자리에 점선 바탕 + 라벨 */
+.hub-card-thumb.soon {
+  display: flex; align-items: center; justify-content: center;
+  border: 1px dashed var(--gray-300); background: var(--gray-50);
+}
+.hub-soon {
+  padding: 6px 14px; border-radius: 999px; border: 1px solid var(--gray-300);
+  font-size: 13px; font-weight: 600; color: var(--gray-500); letter-spacing: .02em;
+}
+.hub-card.is-soon .hub-card-name { color: var(--gray-500); }
+
+.hub-card-arrow { position: absolute; right: 16px; bottom: 22px; color: var(--gray-300); transition: color .15s; }
+.hub-card:hover .hub-card-arrow { color: var(--brand); }
+
+.hub-card-text { display: flex; flex-direction: column; gap: 4px; min-width: 0; padding: 0 28px 4px 4px; }
+/* 이름·설명은 한 줄 — 넘치면 말줄임 (카드 높이를 똑같이 유지) */
+.hub-card-name, .hub-card-desc { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hub-card-name { font-size: 17px; font-weight: 700; }
+/* 프로모션 구분 라벨 — Sales 빌더의 OPTION A/B 라벨처럼 이름 위 작은 글씨 */
+.hub-card-type { margin-bottom: 2px; font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.hub-card-type.type-always { color: var(--gray-500); }
+.hub-card-type.type-big { color: var(--brand); }
+.hub-card-type.type-seasonal { color: #2E7D4F; }
+.hub-card.is-soon .hub-card-type { opacity: .6; }
+.hub-card-desc { font-size: 12px; color: var(--gray-400); }
+
+@media (max-width: 600px) {
+  .app-header { padding: 0 16px; }
+  .hub { padding: 32px 16px 48px; }
+  .hub-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .hub-card { padding: 10px; gap: 10px; }
+  .hub-card-arrow { display: none; }
+  .hub-card-text { padding-right: 4px; }
+  .hub-card-name { font-size: 14px; }
+  .hub-card-desc { font-size: 11px; }
+  .hub-card-type { font-size: 10px; }
+  .hub-soon { padding: 5px 10px; font-size: 11px; }
+}

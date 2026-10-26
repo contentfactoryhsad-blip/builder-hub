@@ -1,0 +1,4 @@
+node_modules/
+.DS_Store
+# 썸네일 원본 (public/thumbs/sales.png 로 잘라 씀)
+sales banner.png
