@@ -4,8 +4,6 @@
 @font-face { font-family: "LGEI Headline"; src: url("fonts/LGEIHeadlineTTF-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
 @font-face { font-family: "LGEI Headline"; src: url("fonts/LGEIHeadlineTTF-Semibold.ttf") format("truetype"); font-weight: 600; font-display: swap; }
 @font-face { font-family: "LGEI Headline"; src: url("fonts/LGEIHeadlineTTF-Bold.ttf") format("truetype"); font-weight: 700; font-display: swap; }
-/* Sales 빌더 스티커 숫자 폰트 */
-@font-face { font-family: "Cal Sans"; src: url("fonts/CalSans-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
 
 :root {
   --font-lgei: "LGEI Headline", "Apple SD Gothic Neo", "Noto Sans CJK KR", "Segoe UI", sans-serif;
@@ -66,14 +64,6 @@ body {
 /* 박스를 꽉 채워 크롭 — 보여줄 위치는 builders.js 의 thumbPos (기본 가운데) */
 .hub-card-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s ease; }
 .hub-card:hover .hub-card-thumb img { transform: scale(1.03); }
-
-/* 썸네일 가운데 스티커 — 박스 높이의 82% */
-.hub-sticker {
-  position: absolute; top: 50%; left: 50%; height: 82%; width: auto; aspect-ratio: 1;
-  transform: translate(-50%, -50%); filter: drop-shadow(0 6px 14px rgb(0 0 0 / .2));
-  transition: transform .3s ease;
-}
-.hub-card:hover .hub-sticker { transform: translate(-50%, -50%) scale(1.05); }
 
 /* Coming soon — 썸네일 자리에 점선 바탕 + 라벨 */
 .hub-card-thumb.soon {
