@@ -54,7 +54,7 @@
         ${b.comingSoon ? '' : `<span class="hub-card-arrow">${arrow}</span>`}`;
       return b.comingSoon
         ? `<div class="hub-card is-soon" aria-disabled="true">${body}</div>`
-        : `<a class="hub-card" href="${b.url}" data-url="${b.url}" target="_blank" rel="noopener">${body}</a>`;
+        : `<a class="hub-card" href="${b.url}" data-url="${b.url}">${body}</a>`;
     }).join('');
   </script>
   <script type="module" src="country.js"></script>

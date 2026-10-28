@@ -8,7 +8,7 @@ export const REGIONS = [
     name: 'Asia', code: 'ASIA',
     countries: [
       ['Australia', 'AU'], ['China', 'CN'], ['India', 'IN'], ['Indonesia', 'ID'], ['Japan', 'JP'],
-      ['Malaysia', 'MY'], ['Philippines', 'PH'], ['Singapore', 'SG'], ['Taiwan', 'TW'], ['Thailand', 'TH'],
+      ['Korea', 'KR'], ['Malaysia', 'MY'], ['Philippines', 'PH'], ['Singapore', 'SG'], ['Taiwan', 'TW'], ['Thailand', 'TH'],
       ['Vietnam', 'VN'],
     ],
   },

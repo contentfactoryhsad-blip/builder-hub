@@ -1,15 +1,25 @@
 // 첫 접속 국가(법인) 선택 팝업 — lg.com Select your region 처럼 지역 아코디언 > 국가.
-// 고른 값은 저장하지 않는다 — 새로 들어오거나 새로고침하면 다시 묻는다 (처음에 잘못 고를 수도 있으니).
+// 고른 값은 브라우저에 기억해 처음 한 번만 묻는다 — 잘못 골랐으면 헤더 오른쪽 국가 버튼으로 바꾼다.
 // 처음에는 고르기 전까지 닫을 수 없고,
 // 헤더의 국가 버튼으로 다시 열면 그때는 닫기(×)·바깥 클릭·Esc 로 닫을 수 있다.
 // 고른 값은 빌더 카드 링크에 ?hub_country=ASIA/KR 처럼 "지역/국가" 코드로 붙여 넘긴다 — 각 빌더가 받아
 // 다운로드 기록(stats)의 country 칸에 그대로 찍는다. 고르기 전에는 카드로 이동할 수 없다.
 import { REGIONS } from './regions.js';
 
-// 이번 방문에서 고른 나라 { name, code: 'ASIA/KR' } — 메모리에만 둔다
+// 고른 나라 { name, code: 'ASIA/KR' } — 이 브라우저에 기억해 두고 다음부터는 묻지 않는다.
+// 목록에서 빠진 코드가 남아 있으면 버리고 다시 묻는다.
+const KEY = 'builderHub.country';
+const codes = new Set(REGIONS.flatMap((r) => r.countries.map(([, c]) => `${r.code}/${c}`)));
 let picked = null;
+try {
+  const v = JSON.parse(localStorage.getItem(KEY));
+  if (v && codes.has(v.code)) picked = v;
+} catch {}
 const read = () => picked;
-const save = (v) => { picked = v; };
+const save = (v) => {
+  picked = v;
+  try { localStorage.setItem(KEY, JSON.stringify(v)); } catch {}
+};
 
 const plus = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path class="v" d="M10 2v16"/><path d="M2 10h16"/></svg>';
 const close = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 4l12 12M16 4L4 16"/></svg>';
