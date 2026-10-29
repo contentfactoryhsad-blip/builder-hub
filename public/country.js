@@ -32,8 +32,8 @@ modal.innerHTML = `
   <div class="cs-modal" role="dialog" aria-modal="true" aria-labelledby="csTitle">
     <div class="cs-head">
       <div>
-        <h2 id="csTitle">Where is your country (subsidiary)?</h2>
-        <p>Select your region, then your country.</p>
+        <h2 id="csTitle">Where is your subsidiary located?</h2>
+        <p>Select your region, then your subsidiary.</p>
       </div>
       <button class="cs-close" type="button" aria-label="Close">${close}</button>
     </div>
