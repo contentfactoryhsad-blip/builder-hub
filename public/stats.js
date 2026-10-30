@@ -22,14 +22,14 @@ const bfName = id => BF_RENAME[id] ?? id;
  */
 const BUILDERS = {
   sales: {
-    name: 'Sales Banner Builder', files: 'banners', filesLabel: '만들어진 배너',
+    name: 'Sales Banner Builder', thumb: 'thumbs/sales.png', files: 'banners', filesLabel: '만들어진 배너',
     bars: () => [['국가별', 'country'], ['시안 (A/B)', 'design'], ['프로모션', 'promotion'], ['매체', 'channels', '|'], ['제품 (모델)', 'product_models', '|']],
     cols: () => [['시안', r => r.design], ['프로모션', r => r.promotion], ['제품', r => `${r.products ?? ''}${r.product_models ? ` · ${r.product_models}` : ''}`],
       ['박스', r => r.boxes], ['매체', r => r.channels], ['장수', r => r.banners]],
     tail: [['의견', r => r.comment]],
   },
   bf: {
-    name: 'Black Friday Builder', files: 'files', filesLabel: '만들어진 파일',
+    name: 'Black Friday Builder', thumb: 'thumbs/black-friday.png', files: 'files', filesLabel: '만들어진 파일',
     tabs: [['content-banner', 'Content Banner Builder'], ['promotion-page', 'Promotion Page Builder']],
     bars: tab => (tab === 'promotion-page'
       ? [['국가별', 'country'], ['구성 (스태틱 / 스태틱+모션)', 'detail'], ['Hero KV', 'item', '|', 'hero'], ['Benefit Summary', 'item', '|', 'card'],
@@ -38,7 +38,7 @@ const BUILDERS = {
     cols: tab => [...(tab === 'promotion-page' ? [] : [['에셋', r => r.item]]), ['채널/구성', r => r.detail], ['파일 수', r => r.files]],
   },
   christmas: {
-    name: 'Christmas Builder', files: 'files', filesLabel: '만들어진 파일',
+    name: 'Christmas Builder', thumb: 'thumbs/christmas.png', files: 'files', filesLabel: '만들어진 파일',
     bars: () => [['국가별', 'country'], ['비주얼 (타입 · 톤)', 'item'], ['받은 것 (채널 / 원본)', 'detail', null, null, d => (d === 'visual' ? 'Visual PNG (3000²)' : d)], ['지역', 'region']],
     cols: () => [['비주얼', r => r.item], ['받은 것', r => (r.detail === 'visual' ? 'Visual PNG (3000²)' : r.detail)], ['파일 수', r => r.files]],
   },
@@ -124,7 +124,8 @@ async function renderHome() {
   $('#csv').hidden = true;
   $('#main').innerHTML = `<p class="card-title" style="margin:0">빌더를 고르세요</p>
     <div class="picks">${Object.entries(BUILDERS).map(([b, c]) => `
-      <a class="card pick" href="#${b}" data-pick="${b}" style="text-decoration:none"><h3>${esc(c.name)}</h3>
+      <a class="card pick" href="#${b}" data-pick="${b}" style="text-decoration:none">
+        <div class="pick-thumb"><img src="${c.thumb}" alt="" loading="lazy" draggable="false" /></div><h3>${esc(c.name)}</h3>
         <span class="muted">다운로드</span><span class="num" data-num>…</span><dl data-dl></dl></a>`).join('')}
     </div>`;
   await Promise.all(Object.entries(BUILDERS).map(async ([b, c]) => {
