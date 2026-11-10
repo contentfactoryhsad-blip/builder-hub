@@ -115,7 +115,7 @@ async function unlock(k) {
 function route() {
   const b = location.hash.slice(1);
   if (BUILDERS[b]) {
-    if (view.builder !== b) view = { builder: b, tab: BUILDERS[b].tabs?.[0][0] ?? null, period: { kind: 'all' } };
+    if (view.builder !== b) view = { builder: b, tab: BUILDERS[b].tabs?.[0][0] ?? null, period: { kind: 'all' }, page: 1 };
     void renderBuilder();
   } else { view.builder = null; void renderHome(); }
 }
@@ -175,6 +175,10 @@ async function renderBuilder(fresh = false) {
   const chips = [{ kind: 'all' }, { kind: 'days', n: 30 }, { kind: 'days', n: 90 }, ...years.map(y => ({ kind: 'year', y }))];
   const same = (a, b2) => JSON.stringify(a) === JSON.stringify(b2);
   const cols = [['시각', r => stamp(r)], ['지역', r => r.region], ['국가', r => r.country], ...c.cols(view.tab)];
+  // 최근 기록 — 한 페이지 PER 건, 아래 페이지 버튼으로 넘긴다 (기간·탭을 바꾸면 1페이지로)
+  const pages = Math.max(1, Math.ceil(shown.length / PER));
+  const page = Math.min(Math.max(1, view.page || 1), pages);
+  const rows = [...shown].reverse().slice((page - 1) * PER, page * PER);
 
   $('#main').innerHTML = `
     <a class="chip back" href="#">← 빌더 목록</a>
@@ -197,16 +201,30 @@ async function renderBuilder(fresh = false) {
     </div>
     <div class="grid2">${c.bars(view.tab).map(([t, f, sp, pre, rn]) => bars(t, tally(shown, f, sp, pre, rn), total)).join('')}</div>
     <div class="card">
-      <p class="card-title">최근 기록 <span class="muted">· ${periodLabel(period)} ${shown.length}건 · 시각은 ${esc(TZ)} 기준</span></p>
+      <p class="card-title" id="log">최근 기록 <span class="muted">· ${periodLabel(period)} ${shown.length}건${pages > 1 ? ` · ${(page - 1) * PER + 1}–${Math.min(page * PER, shown.length)}번째` : ''} · 시각은 ${esc(TZ)} 기준</span></p>
       <div style="overflow-x:auto"><table>
         <thead><tr>${[...cols, ['결과'], ...(c.tail ?? [])].map(([h]) => `<th>${h}</th>`).join('')}</tr></thead>
-        <tbody>${[...shown].reverse().slice(0, 50).map(r => `<tr>
+        <tbody>${rows.map(r => `<tr>
           ${cols.map(([, f]) => `<td title="${esc(f(r))}">${esc(f(r))}</td>`).join('')}
           <td>${r.output ? `<button type="button" data-view="${esc(r.output)}">보기</button>` : '<span class="muted">—</span>'}</td>
           ${(c.tail ?? []).map(([, f]) => `<td title="${esc(f(r))}">${esc(f(r))}</td>`).join('')}
         </tr>`).join('')}</tbody>
       </table></div>
+      ${pager(page, pages)}
     </div>`;
+}
+
+const PER = 50;
+/** ‹ 1 … 4 5 [6] 7 8 … 20 › — 처음·끝과 지금 페이지 앞뒤 2개만 보이고 나머지는 … */
+function pager(page, pages) {
+  if (pages <= 1) return '';
+  const nums = [...new Set([1, pages, ...Array.from({ length: 5 }, (_, i) => page - 2 + i)])]
+    .filter(n => n >= 1 && n <= pages).sort((a, b2) => a - b2);
+  const btn = (n, label, extra = '') => `<button type="button" class="pg${n === page && !extra ? ' on' : ''}" data-page="${n}"${extra}>${label}</button>`;
+  let out = btn(page - 1, '‹', page === 1 ? ' disabled aria-label="Previous"' : ' aria-label="Previous"');
+  nums.forEach((n, i) => { if (i && n - nums[i - 1] > 1) out += '<span class="pg-gap">…</span>'; out += btn(n, n); });
+  out += btn(page + 1, '›', page === pages ? ' disabled aria-label="Next"' : ' aria-label="Next"');
+  return `<nav class="pager" aria-label="최근 기록 페이지">${out}</nav>`;
 }
 
 /* 결과 보기 — 파일별 썸네일(긴 변 600px). 파일 이름 앞부분(채널·기기)으로 묶는다 */
@@ -254,11 +272,13 @@ $('#logout').addEventListener('click', () => { localStorage.removeItem(KEY_STORE
 window.addEventListener('hashchange', () => { if (key && $('#gate').hidden) route(); });
 $('#main').addEventListener('click', e => {
   const t = e.target.closest('[data-tab]');
-  if (t) { view.tab = t.dataset.tab; view.period = { kind: 'all' }; return void renderBuilder(); }
+  if (t) { view.tab = t.dataset.tab; view.period = { kind: 'all' }; view.page = 1; return void renderBuilder(); }
   const c = e.target.closest('[data-period]');
-  if (c) { view.period = JSON.parse(c.dataset.period); return void renderBuilder(); }
+  if (c) { view.period = JSON.parse(c.dataset.period); view.page = 1; return void renderBuilder(); }
   const m = e.target.closest('[data-month]');
-  if (m) { view.period = view.period.kind === 'month' && view.period.ym === m.dataset.month ? { kind: 'all' } : { kind: 'month', ym: m.dataset.month }; return void renderBuilder(); }
+  if (m) { view.period = view.period.kind === 'month' && view.period.ym === m.dataset.month ? { kind: 'all' } : { kind: 'month', ym: m.dataset.month }; view.page = 1; return void renderBuilder(); }
+  const pg = e.target.closest('[data-page]');
+  if (pg && !pg.disabled) { view.page = Number(pg.dataset.page); return void renderBuilder().then(() => $('#log')?.scrollIntoView({ block: 'start' })); }
   const v = e.target.closest('[data-view]');
   if (v) void showOutput(v.dataset.view);
 });

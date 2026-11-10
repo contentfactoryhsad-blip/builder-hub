@@ -42,6 +42,12 @@
     td { border-top: 1px solid var(--gray-100); padding: 6px 16px 6px 0; white-space: nowrap; font-variant-numeric: tabular-nums; max-width: 240px; overflow: hidden; text-overflow: ellipsis; }
     td button { border: 0; background: none; padding: 0; color: var(--brand); cursor: pointer; font: inherit; }
     td button:hover { text-decoration: underline; }
+    .pager { display: flex; justify-content: center; align-items: center; gap: 4px; margin-top: 16px; flex-wrap: wrap; }
+    .pg { min-width: 32px; height: 32px; padding: 0 8px; border: 1px solid var(--gray-200); border-radius: 8px; background: #fff; font: 500 13px var(--font-lgei); color: var(--gray-500); cursor: pointer; }
+    .pg:hover:not(:disabled) { border-color: var(--brand); color: var(--brand); }
+    .pg.on { border-color: var(--brand); background: var(--brand); color: #fff; }
+    .pg:disabled { opacity: .35; cursor: default; }
+    .pg-gap { padding: 0 4px; color: var(--gray-400); }
     .gate { min-height: calc(100vh - var(--header-h)); display: flex; align-items: center; justify-content: center; }
     .gate form { width: 320px; display: flex; flex-direction: column; gap: 12px; }
     .gate input { height: 40px; padding: 0 12px; border: 1px solid var(--gray-200); border-radius: 8px; font: 14px var(--font-lgei); outline: none; }
