@@ -13,5 +13,5 @@ export const BUILDERS = [
   { name: 'Sales Banner Builder', type: 'always', desc: 'Sales promotion banner templates', url: 'https://sales-banner-builder.lge-d2c.com', thumb: 'thumbs/sales.png' },
   { name: 'Black Friday Builder', type: 'big', desc: 'LG Retail content banner for Black Friday', url: 'https://lg-bf-builder.lge-d2c.com', thumb: 'thumbs/black-friday.png' },
   { name: 'Christmas Builder', type: 'seasonal', desc: 'Christmas season visual & banner', url: 'https://christmas-builder.lge-d2c.com', thumb: 'thumbs/christmas.png' },
-  { name: 'Trade In-Up Builder', type: 'always', desc: 'Trade-in / trade-up promotion banner', url: 'https://trade-in-up-builder.lge-d2c.com', comingSoon: true },
+  { name: 'Trade In-Up Builder', type: 'always', desc: 'Trade-in / trade-up promotion banner', url: 'https://trade-in-up-builder.lge-d2c.com', thumb: 'thumbs/trade-in-up.png' },
 ];
