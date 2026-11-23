@@ -17,7 +17,7 @@ const bfName = id => BF_RENAME[id] ?? id;
 
 /**
  * 트레이드인업 초기 기록(11/23 오후)은 에셋 id 로 남았다 (in-b1-01-02-np, up-slot-v-dark-color-01 …).
- * 지금 빌더가 남기는 이름(Trade In · Horizontal Product 02 · Light)과 같게 읽어 준다. 이미 이름이면 그대로.
+ * 지금 빌더가 남기는 이름(Trade In · Horizontal Product 02 · Light · Color 01)과 같게 읽어 준다. 이미 이름이면 그대로.
  */
 const TRADE_BASE = { 'b1-01-01': 'Horizontal Product 01', 'b1-01-02': 'Horizontal Product 02', 'b1-02-01': 'Vertical Product 01', 'b1-02-02': 'Vertical Product 02' };
 const tradeName = id => {
@@ -30,6 +30,7 @@ const tradeName = id => {
   const c = /-color-(\d+)/.exec(rest);
   if (c) parts.push(`Color ${String(Number(c[1]) + 1).padStart(2, '0')}`);
   else if (/-eco/.test(rest)) parts.push('Eco');
+  else parts.push('Color 01'); // 01 Standard — 변형 꼬리가 없는 컷
   return parts.join(' · ');
 };
 
