@@ -16,6 +16,24 @@ const BF_RENAME = {
 const bfName = id => BF_RENAME[id] ?? id;
 
 /**
+ * 트레이드인업 초기 기록(11/23 오후)은 에셋 id 로 남았다 (in-b1-01-02-np, up-slot-v-dark-color-01 …).
+ * 지금 빌더가 남기는 이름(Trade In · Horizontal Product 02 · Light)과 같게 읽어 준다. 이미 이름이면 그대로.
+ */
+const TRADE_BASE = { 'b1-01-01': 'Horizontal Product 01', 'b1-01-02': 'Horizontal Product 02', 'b1-02-01': 'Vertical Product 01', 'b1-02-02': 'Vertical Product 02' };
+const tradeName = id => {
+  const m = /^(in|up)-(b1-0[12]-0[12]|slot-[vh])(.*)$/.exec(id ?? '');
+  if (!m) return id;
+  const [, v, base, rest] = m;
+  const parts = [v === 'up' ? 'Trade Up' : 'Trade In'];
+  if (base.startsWith('slot')) parts.push('Product Slot', base === 'slot-h' ? 'Horizontal' : 'Vertical');
+  else parts.push(TRADE_BASE[base], /-dark/.test(rest) ? 'Dark' : 'Light');
+  const c = /-color-(\d+)/.exec(rest);
+  if (c) parts.push(`Color ${String(Number(c[1]) + 1).padStart(2, '0')}`);
+  else if (/-eco/.test(rest)) parts.push('Eco');
+  return parts.join(' · ');
+};
+
+/**
  * 빌더별 화면 구성.
  *   files: 만들어진 파일 수 칸 · tabs: builder 칸으로 나누는 탭 (블프는 두 빌더가 한 CSV)
  *   bars(tab): [제목, 칸, 쪼갤 구분자?, 이름 바꾸기?] · cols(tab): [머리, r => 값]
@@ -44,8 +62,8 @@ const BUILDERS = {
   },
   trade: {
     name: 'Trade In-Up Builder', thumb: 'thumbs/trade-in-up.png', files: 'files', filesLabel: '만들어진 파일',
-    bars: () => [['국가별', 'country'], ['비주얼 (에셋)', 'item'], ['받은 것 (채널 / 원본)', 'detail', null, null, d => (d === 'visual' ? 'Visual PNG' : d)], ['지역', 'region']],
-    cols: () => [['비주얼', r => r.item], ['받은 것', r => (r.detail === 'visual' ? 'Visual PNG' : r.detail)], ['파일 수', r => r.files]],
+    bars: () => [['국가별', 'country'], ['비주얼 (에셋)', 'item', null, null, tradeName], ['받은 것 (채널 / 원본)', 'detail', null, null, d => (d === 'visual' ? 'Visual PNG' : d)], ['지역', 'region']],
+    cols: () => [['비주얼', r => tradeName(r.item)], ['받은 것', r => (r.detail === 'visual' ? 'Visual PNG' : r.detail)], ['파일 수', r => r.files]],
   },
 };
 
