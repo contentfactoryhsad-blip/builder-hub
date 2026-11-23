@@ -20,6 +20,7 @@ const BUILDERS = {
   sales: { url: 'https://sales-banner-builder.lge-d2c.com', key: () => process.env.SALES_USAGE_KEY },
   bf: { url: 'https://lg-bf-builder.lge-d2c.com', key: () => process.env.BF_USAGE_KEY },
   christmas: { url: 'https://christmas-builder.lge-d2c.com', key: () => process.env.CHRISTMAS_USAGE_KEY },
+  trade: { url: 'https://trade-in-up-builder.lge-d2c.com', key: () => process.env.TRADE_USAGE_KEY },
 };
 const clean = v => String(v ?? '').trim().replace(/^["']|["']$/g, '');
 function guard(req, res) {

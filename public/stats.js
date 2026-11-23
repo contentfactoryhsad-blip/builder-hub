@@ -42,6 +42,11 @@ const BUILDERS = {
     bars: () => [['국가별', 'country'], ['비주얼 (타입 · 톤)', 'item'], ['받은 것 (채널 / 원본)', 'detail', null, null, d => (d === 'visual' ? 'Visual PNG (3000²)' : d)], ['지역', 'region']],
     cols: () => [['비주얼', r => r.item], ['받은 것', r => (r.detail === 'visual' ? 'Visual PNG (3000²)' : r.detail)], ['파일 수', r => r.files]],
   },
+  trade: {
+    name: 'Trade In-Up Builder', thumb: 'thumbs/trade-in-up.png', files: 'files', filesLabel: '만들어진 파일',
+    bars: () => [['국가별', 'country'], ['비주얼 (에셋)', 'item'], ['받은 것 (채널 / 원본)', 'detail', null, null, d => (d === 'visual' ? 'Visual PNG' : d)], ['지역', 'region']],
+    cols: () => [['비주얼', r => r.item], ['받은 것', r => (r.detail === 'visual' ? 'Visual PNG' : r.detail)], ['파일 수', r => r.files]],
+  },
 };
 
 let key = localStorage.getItem(KEY_STORE) || '';
